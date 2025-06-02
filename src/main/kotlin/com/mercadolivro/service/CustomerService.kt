@@ -1,42 +1,42 @@
 package com.mercadolivro.service
 
+import com.mercadolivro.enums.CustomerStatus
 import com.mercadolivro.model.CustomerModel
+import com.mercadolivro.repository.CustomerRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CustomerService {
-    // Pseudo Database
-    val customers = mutableListOf<CustomerModel>()
+class CustomerService(
+    val customerRepository: CustomerRepository,
+    val bookService: BookService
+) {
 
     fun getAll(name: String?): List<CustomerModel> {
         name?.let {
-            return customers.filter { it.name.contains(name, ignoreCase = true) }
+            return customerRepository.findByNameContainingIgnoreCase(name)
         }
-        return customers
+        return customerRepository.findAll().toList()
     }
 
     fun createCustomer(customer: CustomerModel) {
-        val id: String = if (customers.isEmpty()) {
-            1
-        } else {
-            customers.last().id!!.toInt() + 1
-        }.toString()
-        customer.id = id
-        customers.add(customer)
+        customerRepository.save(customer)
     }
 
-    fun getCustomer(id: String): CustomerModel {
-        return customers.first { it.id == id }
+    fun findById(id: Int): CustomerModel {
+        return customerRepository.findById(id).orElseThrow()
     }
 
     fun updateCustomer(customer: CustomerModel) {
-        customers.first { it.id == customer.id }.let {
-            it.name = customer.name
-            it.email = customer.email
+        if (!customerRepository.existsById(customer.id!!)) {
+            throw Exception()
         }
+        customerRepository.save(customer)
     }
 
-    fun deleteCustomer(id: String) {
-        customers.removeIf { it.id == id }
+    fun deleteCustomer(id: Int) {
+        val customer = findById(id)
+        bookService.deleteByCustomer(customer)
+        customer.status = CustomerStatus.INATIVO
+        customerRepository.save(customer)
     }
 }
