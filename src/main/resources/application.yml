@@ -12,3 +12,5 @@ spring:
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
+  jackson:
+    default-property-inclusion: non-null
