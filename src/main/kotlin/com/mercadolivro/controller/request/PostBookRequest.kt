@@ -13,6 +13,6 @@ data class PostBookRequest (
     @field:NotNull(message = "Price must be informed")
     var price: BigDecimal,
 
-    @JsonAlias("customer_id")
+    @param:JsonAlias("customer_id")
     var customerId: Int
 )

@@ -14,3 +14,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jackson:
     default-property-inclusion: non-null
+
+jwt:
+  secret: 90a4187b-8b6b-4f35-859e-b640d2e4dc88
+  expiration: 999999
