@@ -1,12 +1,13 @@
 package com.mercadolivro.security
 
+import com.mercadolivro.exception.AuthenticationException
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
 import javax.crypto.SecretKey
-import kotlin.io.encoding.Base64
 
 @Component
 class JwtUtil {
@@ -35,5 +36,29 @@ class JwtUtil {
             .expiration(Date(now.time + expiration!!))
             .signWith(secretKey)
             .compact()
+    }
+
+    fun isValidToken(token: String): Boolean {
+        val claims = getClaims(token)
+        return !(claims.subject.isNullOrEmpty() ||
+                claims.expiration == null ||
+                Date().after(claims.expiration)
+                )
+    }
+
+    private fun getClaims(token: String): Claims {
+        return try {
+            Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload
+        } catch (e: Exception) {
+            throw AuthenticationException("Token Invalido: Get Claims", "999")
+        }
+    }
+
+    fun getSubject(token: String): String {
+        return getClaims(token).subject
     }
 }

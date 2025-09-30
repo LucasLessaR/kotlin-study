@@ -2,7 +2,12 @@ spring:
   application:
     name: mercado-livro
   profiles:
-      active: dev
+      active: test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mercadolivro?createDatabaseIfNotExist=true
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update

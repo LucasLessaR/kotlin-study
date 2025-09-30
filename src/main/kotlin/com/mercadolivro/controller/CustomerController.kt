@@ -8,6 +8,7 @@ import com.mercadolivro.extension.toResponse
 import com.mercadolivro.service.CustomerService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("customer")
+@RequestMapping("customers")
 class CustomerController(
     val customerService: CustomerService
 ) {
@@ -36,6 +37,7 @@ class CustomerController(
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || #id == authentication.principal.id")
     fun getCustomer(@PathVariable id: Int): CustomerResponse {
         return customerService.findById(id).toResponse()
     }

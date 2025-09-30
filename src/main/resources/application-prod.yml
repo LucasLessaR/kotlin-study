@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: mercado-livro
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mercadolivroprod
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver

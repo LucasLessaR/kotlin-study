@@ -5,6 +5,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "1.9.25"
     kotlin("plugin.serialization") version "2.2.10"
+    id("org.jetbrains.kotlinx.kover") version "0.9.2"
+    jacoco
 }
 
 group = "com.mercadolivro"
@@ -42,6 +44,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("io.mockk:mockk:1.14.5")
 }
 
 kotlin {
